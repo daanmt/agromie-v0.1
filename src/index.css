@@ -2,41 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Agricultural ERP Design System - Core colors and tokens
+All colors MUST be HSL for proper theming.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors - Agricultural theme */
+    --background: 46 28% 97%;
+    --foreground: 25 35% 15%;
 
+    /* Card system */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 25 35% 15%;
 
+    /* Popover system */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 25 35% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Agricultural Green */
+    --primary: 142 52% 38%;
+    --primary-foreground: 0 0% 98%;
+    --primary-light: 142 45% 45%;
+    --primary-dark: 142 60% 28%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Earth Brown */
+    --secondary: 25 28% 85%;
+    --secondary-foreground: 25 35% 25%;
+    --secondary-dark: 25 45% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Accent - Sky Blue for data */
+    --accent: 206 75% 92%;
+    --accent-foreground: 206 85% 25%;
+    --accent-primary: 206 85% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Success - Crop Green */
+    --success: 122 58% 45%;
+    --success-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Warning - Harvest Gold */
+    --warning: 43 85% 55%;
+    --warning-foreground: 25 35% 15%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Destructive - Alert Red */
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 98%;
 
-    --radius: 0.5rem;
+    /* Muted colors */
+    --muted: 25 15% 92%;
+    --muted-foreground: 25 20% 45%;
+
+    /* Border and inputs */
+    --border: 25 20% 88%;
+    --input: 25 20% 88%;
+    --ring: 142 52% 38%;
+
+    /* Border radius */
+    --radius: 0.75rem;
+
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--muted)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-primary)));
+    --gradient-dashboard: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+
+    /* Shadows */
+    --shadow-card: 0 4px 12px -2px hsl(var(--primary) / 0.1);
+    --shadow-alert: 0 8px 25px -5px hsl(var(--warning) / 0.3);
+    --shadow-success: 0 4px 12px -2px hsl(var(--success) / 0.2);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +89,53 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark mode - Agricultural theme */
+    --background: 25 35% 8%;
+    --foreground: 46 28% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 25 30% 12%;
+    --card-foreground: 46 28% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 25 30% 12%;
+    --popover-foreground: 46 28% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 142 52% 55%;
+    --primary-foreground: 25 35% 8%;
+    --primary-light: 142 45% 65%;
+    --primary-dark: 142 60% 35%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 25 25% 18%;
+    --secondary-foreground: 46 28% 85%;
+    --secondary-dark: 25 35% 15%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 206 75% 20%;
+    --accent-foreground: 206 85% 85%;
+    --accent-primary: 206 85% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --success: 122 58% 55%;
+    --success-foreground: 25 35% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --warning: 43 85% 65%;
+    --warning-foreground: 25 35% 8%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --destructive: 0 72% 65%;
+    --destructive-foreground: 25 35% 8%;
+
+    --muted: 25 25% 15%;
+    --muted-foreground: 25 20% 65%;
+
+    --border: 25 25% 22%;
+    --input: 25 25% 22%;
+    --ring: 142 52% 55%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--muted)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-primary)));
+    --gradient-dashboard: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+
+    --shadow-card: 0 4px 12px -2px hsl(0 0% 0% / 0.3);
+    --shadow-alert: 0 8px 25px -5px hsl(var(--warning) / 0.4);
+    --shadow-success: 0 4px 12px -2px hsl(var(--success) / 0.3);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

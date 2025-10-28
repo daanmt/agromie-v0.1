@@ -1,4 +1,4 @@
-import { Bell, Search, User, Sun, Moon } from "lucide-react";
+import { Bell, Search, User, Volume2, VolumeX } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,8 +9,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useSpeech } from "@/hooks/use-speech";
 
 export function AppHeader() {
+  const { isEnabled, toggle, speak } = useSpeech();
   return (
     <header className="h-16 bg-card border-b-2 border-border shadow-card flex items-center justify-between px-4">
       <div className="flex items-center gap-4">
@@ -26,6 +34,38 @@ export function AppHeader() {
       </div>
 
       <div className="flex items-center gap-3">
+        {/* Audio Accessibility Toggle */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant={isEnabled ? "default" : "outline"} 
+                size="icon"
+                onClick={() => {
+                  toggle();
+                  speak(isEnabled ? "Áudio desativado" : "Áudio de acessibilidade ativado. Passe o mouse sobre os elementos para ouvir as informações");
+                }}
+                className="relative"
+                aria-label={isEnabled ? "Desativar áudio de acessibilidade" : "Ativar áudio de acessibilidade"}
+              >
+                {isEnabled ? (
+                  <Volume2 className="h-5 w-5" />
+                ) : (
+                  <VolumeX className="h-5 w-5" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="font-medium">
+                {isEnabled ? "Desativar" : "Ativar"} áudio de acessibilidade
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Ouça informações ao passar o mouse
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

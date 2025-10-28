@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useSpeech } from "@/hooks/use-speech";
 
 interface ModuleCardProps {
   title: string;
@@ -102,6 +103,13 @@ const modules: ModuleCardProps[] = [
 
 function ModuleCard({ title, description, icon: Icon, stats, route, status, variant = "default" }: ModuleCardProps) {
   const navigate = useNavigate();
+  const { speak } = useSpeech();
+
+  const handleMouseEnter = () => {
+    const statusText = status ? `. Status: ${status}` : "";
+    const statsText = stats.map(s => `${s.label}: ${s.value}`).join(". ");
+    speak(`Módulo: ${title}. ${description}${statusText}. ${statsText}`);
+  };
 
   const getVariantClasses = () => {
     switch (variant) {
@@ -130,7 +138,12 @@ function ModuleCard({ title, description, icon: Icon, stats, route, status, vari
   };
 
   return (
-    <Card className={`border-2 transition-all duration-300 hover:scale-[1.02] cursor-pointer ${getVariantClasses()}`}>
+    <Card 
+      className={`border-2 transition-all duration-300 hover:scale-[1.02] cursor-pointer ${getVariantClasses()}`}
+      onMouseEnter={handleMouseEnter}
+      role="article"
+      aria-label={`${title}: ${description}`}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">

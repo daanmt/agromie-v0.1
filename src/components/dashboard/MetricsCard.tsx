@@ -1,6 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useSpeech } from "@/hooks/use-speech";
 
 interface MetricsCardProps {
   title: string;
@@ -22,6 +23,16 @@ export function MetricsCard({
   trend,
   variant = "default"
 }: MetricsCardProps) {
+  const { speak } = useSpeech();
+
+  const handleMouseEnter = () => {
+    const trendText = trend 
+      ? `${trend.isPositive ? "aumento" : "diminuição"} de ${trend.value.replace("+", "").replace("-", "")}` 
+      : "";
+    const subtitleText = subtitle ? `. ${subtitle}` : "";
+    speak(`${title}: ${value}${subtitleText}${trendText ? `. ${trendText}` : ""}`);
+  };
+
   const getVariantClasses = () => {
     switch (variant) {
       case "success":
@@ -49,7 +60,12 @@ export function MetricsCard({
   };
 
   return (
-    <Card className={cn("border-2 shadow-card hover:shadow-lg transition-all duration-300", getVariantClasses())}>
+    <Card 
+      className={cn("border-2 shadow-card hover:shadow-lg transition-all duration-300", getVariantClasses())}
+      onMouseEnter={handleMouseEnter}
+      role="article"
+      aria-label={`${title}: ${value}`}
+    >
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">

@@ -56,42 +56,43 @@ export function AppSidebar() {
     >
       <SidebarContent className="bg-gradient-secondary">
         {/* Logo/Brand Section */}
-        <div className="p-4 border-b border-border">
+        <div className="p-6 border-b border-border">
           {!isCollapsed ? (
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <Wheat className="h-5 w-5 text-primary-foreground" />
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-gradient-primary rounded-xl flex items-center justify-center shadow-lg">
+                <Wheat className="h-8 w-8 text-primary-foreground" />
               </div>
               <div>
-                <h2 className="font-bold text-lg text-foreground">AgroERP</h2>
-                <p className="text-xs text-muted-foreground">Gestão Agrícola</p>
+                <h2 className="font-bold text-2xl text-foreground">AgrOmie</h2>
+                <p className="text-base text-muted-foreground font-medium">Gestão Rural Simples</p>
               </div>
             </div>
           ) : (
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center mx-auto">
-              <Wheat className="h-5 w-5 text-primary-foreground" />
+            <div className="w-14 h-14 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto">
+              <Wheat className="h-8 w-8 text-primary-foreground" />
             </div>
           )}
         </div>
 
-        <SidebarGroup className="px-2 pt-4">
-          <SidebarGroupLabel className={isCollapsed ? "sr-only" : "text-muted-foreground font-medium mb-2"}>
+        <SidebarGroup className="px-4 pt-6">
+          <SidebarGroupLabel className={isCollapsed ? "sr-only" : "text-muted-foreground font-semibold text-lg mb-4"}>
             Módulos Principais
           </SidebarGroupLabel>
           
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu className="space-y-3">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="h-11">
+                  <SidebarMenuButton asChild className="h-16 text-lg font-semibold">
                     <NavLink 
                       to={item.url} 
                       end 
                       className={getNavCls}
                       title={isCollapsed ? item.title : undefined}
+                      aria-label={`Ir para ${item.title}`}
                     >
-                      <item.icon className={`h-5 w-5 ${isCollapsed ? "mx-auto" : "mr-3"}`} />
-                      {!isCollapsed && <span className="font-medium">{item.title}</span>}
+                      <item.icon className={`h-7 w-7 ${isCollapsed ? "mx-auto" : "mr-4"}`} aria-hidden="true" />
+                      {!isCollapsed && <span className="font-semibold">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -101,17 +102,18 @@ export function AppSidebar() {
         </SidebarGroup>
 
         {/* Settings at bottom */}
-        <div className="mt-auto p-2 border-t border-border">
+        <div className="mt-auto p-4 border-t border-border">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild className="h-11">
+              <SidebarMenuButton asChild className="h-16 text-lg font-semibold">
                 <NavLink 
                   to="/configuracoes" 
                   className={getNavCls}
                   title={isCollapsed ? "Configurações" : undefined}
+                  aria-label="Ir para Configurações"
                 >
-                  <Settings className={`h-5 w-5 ${isCollapsed ? "mx-auto" : "mr-3"}`} />
-                  {!isCollapsed && <span className="font-medium">Configurações</span>}
+                  <Settings className={`h-7 w-7 ${isCollapsed ? "mx-auto" : "mr-4"}`} aria-hidden="true" />
+                  {!isCollapsed && <span className="font-semibold">Configurações</span>}
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

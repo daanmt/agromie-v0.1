@@ -5,12 +5,13 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { MetricsCard } from "@/components/dashboard/MetricsCard";
 import { AlertsSection } from "@/components/dashboard/AlertsSection";
 import { ModulesGrid } from "@/components/dashboard/ModulesGrid";
+import { AIAssistant } from "@/components/layout/AIAssistant";
 import farmHero from "@/assets/farm-hero.jpg";
 
 const Index = () => {
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-dashboard">
+    <div className="min-h-screen flex w-full bg-gradient-dashboard">
+      <SidebarProvider>
         <AppSidebar />
         <div className="flex-1 flex flex-col">
           <AppHeader />
@@ -29,16 +30,16 @@ const Index = () => {
             >
               <div className="relative z-10 flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl font-bold mb-2">Bem-vindo ao AgroERP</h1>
-                  <p className="text-primary-foreground/90 text-lg">
-                    Gerencie suas operações agrícolas com inteligência e eficiência
+                  <h1 className="text-4xl font-bold mb-2">Bem-vindo ao AgrOmie</h1>
+                  <p className="text-primary-foreground/90 text-xl font-medium">
+                    Seu parceiro na gestão rural simples e eficiente
                   </p>
-                  <p className="text-primary-foreground/70 mt-2">
+                  <p className="text-primary-foreground/80 mt-3 text-lg">
                     Dashboard atualizado • Última sincronização há 5 minutos
                   </p>
                 </div>
                 <div className="hidden md:block">
-                  <Wheat className="h-24 w-24 text-primary-foreground/20" />
+                  <Wheat className="h-28 w-28 text-primary-foreground/20" aria-hidden="true" />
                 </div>
               </div>
             </div>
@@ -130,8 +131,9 @@ const Index = () => {
             </div>
           </main>
         </div>
-      </div>
-    </SidebarProvider>
+        <AIAssistant />
+      </SidebarProvider>
+    </div>
   );
 };
 

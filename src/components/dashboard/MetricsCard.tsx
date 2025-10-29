@@ -13,6 +13,8 @@ interface MetricsCardProps {
     isPositive: boolean;
   };
   variant?: "default" | "success" | "warning" | "accent";
+  iconClassName?: string;
+  borderClassName?: string;
 }
 
 export function MetricsCard({ 
@@ -21,7 +23,9 @@ export function MetricsCard({
   subtitle, 
   icon: Icon, 
   trend,
-  variant = "default"
+  variant = "default",
+  iconClassName,
+  borderClassName
 }: MetricsCardProps) {
   const { speak } = useSpeech();
 
@@ -61,7 +65,10 @@ export function MetricsCard({
 
   return (
     <Card 
-      className={cn("border-2 shadow-card hover:shadow-lg transition-all duration-300", getVariantClasses())}
+      className={cn(
+        "border-2 shadow-card hover:shadow-lg transition-all duration-300", 
+        borderClassName || getVariantClasses()
+      )}
       onMouseEnter={handleMouseEnter}
       role="article"
       aria-label={`${title}: ${value}`}
@@ -88,7 +95,7 @@ export function MetricsCard({
           
           <div className={cn(
             "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg",
-            getIconVariant()
+            iconClassName || getIconVariant()
           )}>
             <Icon className="h-6 w-6" />
           </div>

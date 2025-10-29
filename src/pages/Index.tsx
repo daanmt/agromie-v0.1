@@ -60,7 +60,8 @@ const Index = () => {
                 subtitle="Bovinos + Suínos"
                 icon={Beef}
                 trend={{ value: "+45", isPositive: true }}
-                variant="warning"
+                iconClassName="bg-white text-red-500 border-2 border-red-500"
+                borderClassName="bg-gradient-to-br from-red-500/10 to-red-500/5 border-red-500/30"
               />
               <MetricsCard
                 title="Produtividade"
@@ -76,7 +77,8 @@ const Index = () => {
                 subtitle="Capacidade média"
                 icon={Droplets}
                 trend={{ value: "-15%", isPositive: false }}
-                variant="warning"
+                iconClassName="bg-white text-blue-500 border-2 border-blue-500"
+                borderClassName="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/30"
               />
             </div>
 

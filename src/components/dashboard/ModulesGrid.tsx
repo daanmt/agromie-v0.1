@@ -23,6 +23,7 @@ interface ModuleCardProps {
   route: string;
   status?: string;
   variant?: "default" | "success" | "warning" | "accent";
+  iconClassName?: string;
 }
 
 const modules: ModuleCardProps[] = [
@@ -59,6 +60,7 @@ const modules: ModuleCardProps[] = [
     route: "/clima", 
     variant: "accent",
     status: "Seca moderada",
+    iconClassName: "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg bg-white text-blue-500 border-2 border-blue-500",
     stats: [
       { label: "Precipitação/Mês", value: "45mm", trend: "-25%" },
       { label: "Reservatórios", value: "68%" },
@@ -70,6 +72,7 @@ const modules: ModuleCardProps[] = [
     description: "Controle de fertilizantes, sementes e produtos veterinários",
     icon: Package,
     route: "/insumos",
+    iconClassName: "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg bg-white text-orange-500 border-2 border-orange-500",
     stats: [
       { label: "Itens em Estoque", value: "156" },
       { label: "Valor Total", value: "R$ 89.5k" },
@@ -101,7 +104,7 @@ const modules: ModuleCardProps[] = [
   }
 ];
 
-function ModuleCard({ title, description, icon: Icon, stats, route, status, variant = "default" }: ModuleCardProps) {
+function ModuleCard({ title, description, icon: Icon, stats, route, status, variant = "default", iconClassName }: ModuleCardProps) {
   const navigate = useNavigate();
   const { speak } = useSpeech();
 
@@ -147,7 +150,7 @@ function ModuleCard({ title, description, icon: Icon, stats, route, status, vari
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${getIconVariant()}`}>
+            <div className={iconClassName || `w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${getIconVariant()}`}>
               <Icon className="h-6 w-6" />
             </div>
             <div>

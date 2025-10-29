@@ -1,4 +1,4 @@
-import { Wheat, Users, TrendingUp, MapPin, Droplets, DollarSign } from "lucide-react";
+import { Wheat, Beef, TrendingUp, MapPin, Droplets, DollarSign, AlertTriangle } from "lucide-react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { AppHeader } from "@/components/layout/AppHeader";
@@ -58,9 +58,9 @@ const Index = () => {
                 title="Rebanho Total"
                 value="2.340"
                 subtitle="Bovinos + Suínos"
-                icon={Users}
+                icon={Beef}
                 trend={{ value: "+45", isPositive: true }}
-                variant="accent"
+                variant="warning"
               />
               <MetricsCard
                 title="Produtividade"
@@ -84,13 +84,23 @@ const Index = () => {
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
               {/* Alerts Section */}
               <div className="xl:col-span-1">
+                <div className="mb-4">
+                  <h2 className="text-2xl font-bold text-foreground mb-2 flex items-center gap-2">
+                    <AlertTriangle className="h-6 w-6 text-destructive" />
+                    Alertas Importantes
+                  </h2>
+                  <p className="text-muted-foreground">Requerem atenção imediata</p>
+                </div>
                 <AlertsSection />
               </div>
               
               {/* Quick Actions */}
               <div className="xl:col-span-2">
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Visão Geral dos Módulos</h2>
+                <div className="mb-4">
+                  <h2 className="text-2xl font-bold text-foreground mb-2 flex items-center gap-2">
+                    <Wheat className="h-6 w-6 text-primary" />
+                    Visão Geral dos Módulos
+                  </h2>
                   <p className="text-muted-foreground">Acesse rapidamente os principais recursos do sistema</p>
                 </div>
                 <ModulesGrid />

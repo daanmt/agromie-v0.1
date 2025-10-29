@@ -1,6 +1,6 @@
 import { 
   Wheat, 
-  Users, 
+  Beef, 
   CloudRain, 
   Package, 
   DollarSign, 
@@ -42,7 +42,7 @@ const modules: ModuleCardProps[] = [
   {
     title: "Gestão Pecuária", 
     description: "Controle de rebanho, vacinação e saúde animal",
-    icon: Users,
+    icon: Beef,
     route: "/pecuaria",
     variant: "warning",
     status: "Vacinas pendentes",

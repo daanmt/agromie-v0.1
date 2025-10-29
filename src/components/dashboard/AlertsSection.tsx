@@ -78,11 +78,10 @@ const getAlertBadgeVariant = (type: string) => {
 
 export function AlertsSection() {
   return (
-    <Card className="border-2 shadow-card">
+    <Card className="border-2 shadow-card border-destructive/20 bg-gradient-to-br from-destructive/5 to-background">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-foreground">
-          <AlertTriangle className="h-5 w-5 text-warning" />
-          Alertas Importantes
+        <CardTitle className="flex items-center gap-2 text-foreground text-lg">
+          Últimos Alertas
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -98,7 +97,7 @@ export function AlertsSection() {
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2 mb-1">
-                  <h4 className="font-semibold text-sm text-foreground">{alert.title}</h4>
+                  <h4 className="font-bold text-sm text-foreground">{alert.title}</h4>
                   <Badge variant={getAlertBadgeVariant(alert.type) as any} className="text-xs">
                     {alert.type === "critical" ? "Crítico" : 
                      alert.type === "warning" ? "Atenção" :

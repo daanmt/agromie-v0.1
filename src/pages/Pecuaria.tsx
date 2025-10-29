@@ -1,4 +1,4 @@
-import { ArrowLeft, Users, Activity, Calendar, TrendingUp } from "lucide-react";
+import { ArrowLeft, Beef, Activity, Calendar, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -52,7 +52,7 @@ const Pecuaria = () => {
           </Button>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-warning rounded-xl flex items-center justify-center">
-              <Users className="h-6 w-6 text-warning-foreground" />
+              <Beef className="h-6 w-6 text-warning-foreground" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-foreground">Gestão Pecuária</h1>
@@ -65,7 +65,7 @@ const Pecuaria = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="border-2 border-warning/30 bg-gradient-to-br from-warning/5 to-background">
             <CardContent className="p-6 text-center">
-              <Users className="h-8 w-8 text-warning mx-auto mb-2" />
+              <Beef className="h-8 w-8 text-warning mx-auto mb-2" />
               <h3 className="font-bold text-2xl text-foreground">2.460</h3>
               <p className="text-sm text-muted-foreground">Total do Rebanho</p>
             </CardContent>

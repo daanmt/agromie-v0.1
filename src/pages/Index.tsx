@@ -6,7 +6,7 @@ import { MetricsCard } from "@/components/dashboard/MetricsCard";
 import { AlertsSection } from "@/components/dashboard/AlertsSection";
 import { ModulesGrid } from "@/components/dashboard/ModulesGrid";
 import { AIAssistant } from "@/components/layout/AIAssistant";
-import farmHero from "@/assets/farm-hero.jpg";
+import farmHero from "@/assets/farm-sunset.jpg";
 
 const Index = () => {
   return (
@@ -20,26 +20,28 @@ const Index = () => {
           <main className="flex-1 p-6 space-y-8">
             {/* Welcome Section */}
             <div 
-              className="relative rounded-2xl p-8 text-primary-foreground shadow-success overflow-hidden"
+              className="relative rounded-2xl p-8 text-white shadow-success overflow-hidden"
               style={{
-                backgroundImage: `linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-light)) 50%, hsl(var(--primary-dark)) 100%), url(${farmHero})`,
+                backgroundImage: `linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.5) 100%), url(${farmHero})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundBlendMode: 'overlay'
+                backgroundBlendMode: 'normal'
               }}
             >
               <div className="relative z-10 flex items-center justify-between">
                 <div>
-                  <h1 className="text-4xl font-bold mb-2">Bem-vindo ao AgrOmie</h1>
-                  <p className="text-primary-foreground/90 text-xl font-medium">
+                  <h1 className="text-5xl font-extrabold mb-3 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] tracking-tight">
+                    Bem-vindo ao AgrOmie
+                  </h1>
+                  <p className="text-white/95 text-xl font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
                     Seu parceiro na gestão rural simples e eficiente
                   </p>
-                  <p className="text-primary-foreground/80 mt-3 text-lg">
+                  <p className="text-white/90 mt-3 text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
                     Dashboard atualizado • Última sincronização há 5 minutos
                   </p>
                 </div>
                 <div className="hidden md:block">
-                  <Wheat className="h-28 w-28 text-primary-foreground/20" aria-hidden="true" />
+                  <Wheat className="h-28 w-28 text-white/30 drop-shadow-lg" aria-hidden="true" />
                 </div>
               </div>
             </div>

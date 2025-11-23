@@ -1,4 +1,5 @@
-import { Bell, Search, User, Volume2, VolumeX } from "lucide-react";
+import { Bell, Search, User, Volume2, VolumeX, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +9,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
@@ -16,9 +18,35 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useSpeech } from "@/hooks/use-speech";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 export function AppHeader() {
   const { isEnabled, toggle, speak } = useSpeech();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast({
+        title: 'Até logo!',
+        description: 'Você foi desconectado com sucesso.',
+      });
+      navigate('/login');
+    } catch (error: any) {
+      toast({
+        title: 'Erro ao fazer logout',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const userEmail = user?.email || 'Usuário';
+  const userName = user?.user_metadata?.full_name || 'Usuário';
+
   return (
     <header className="h-16 bg-card border-b-2 border-border shadow-card flex items-center justify-between px-4">
       <div className="flex items-center gap-4">
@@ -109,15 +137,19 @@ export function AppHeader() {
                 <User className="h-4 w-4 text-primary-foreground" />
               </div>
               <div className="text-left hidden md:block">
-                <p className="text-sm font-medium">João Silva</p>
-                <p className="text-xs text-muted-foreground">Fazendeiro</p>
+                <p className="text-sm font-medium">{userName}</p>
+                <p className="text-xs text-muted-foreground">{userEmail}</p>
               </div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>Perfil</DropdownMenuItem>
             <DropdownMenuItem>Configurações</DropdownMenuItem>
-            <DropdownMenuItem>Sair</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+              <LogOut className="h-4 w-4 mr-2" />
+              Sair
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

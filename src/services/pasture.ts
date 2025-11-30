@@ -357,9 +357,10 @@ export const pastureCalculations = {
         totalCapacityUA: `${result.totalCapacityUA.toFixed(2)} UA`,
         currentUA: `${result.currentUA.toFixed(2)} UA`,
         stockingRate: `${result.stockingRate.toFixed(2)} UA/ha`,
-      status: result.status,
-      stockingRatePercent: `${stockingRatePercent.toFixed(2)}%`
-    });
+        status: result.status,
+        stockingRatePercent: `${stockingRatePercent.toFixed(2)}%`
+      });
+    }
     
     return result;
   },

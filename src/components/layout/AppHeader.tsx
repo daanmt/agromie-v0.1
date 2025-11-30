@@ -44,7 +44,7 @@ export function AppHeader() {
   };
 
   const userEmail = user?.email || 'Usuário';
-  const userName = user?.user_metadata?.full_name || 'Usuário';
+  const userName = user?.full_name || user?.email || 'Usuário';
   return (
     <header className="h-16 bg-card border-b-2 border-border shadow-card flex items-center justify-between px-4">
       <div className="flex items-center gap-4">

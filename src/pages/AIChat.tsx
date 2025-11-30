@@ -168,57 +168,43 @@ export default function AIChat() {
     setIsLoading(true);
 
     try {
-      // Processar mensagem (interpretar + executar)
-      const { tasks, results } = await aiAgent.processMessage(userInput);
+      // Processar mensagem com orchestrator LLM-centered
+      const result = await aiOrchestrator.processMessage(userInput);
 
-      // Mostrar lista de tarefas se houver
-      if (tasks) {
-        const tasksList = formatTasksList(tasks);
-        const tasksMessage: Message = {
-          role: "system",
-          content: tasksList,
-          timestamp: new Date(),
-          tasks: tasks,
-        };
-        setMessages((prev) => [...prev, tasksMessage]);
+      // Adicionar resposta do assistente
+      const assistantContent = result.finalResponse || result.message || "Não entendi. Pode reformular?";
+      
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: assistantContent,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      // Recarregar métricas se houve tool calls
+      if (result.toolCalls > 0) {
+        setTimeout(() => {
+          loadMetrics();
+        }, 300);
+        setTimeout(() => {
+          loadMetrics();
+        }, 1000);
       }
 
-      // Mostrar resultados
-      if (results && results.length > 0) {
-        const successCount = results.filter((r) => r.success).length;
-        const allSuccess = successCount === results.length;
-        
-        let resultContent = "";
-        if (results.length === 1) {
-          resultContent = results[0].success
-            ? `✅ ${results[0].message}`
-            : `❌ ${results[0].message}`;
-        } else {
-          resultContent = allSuccess
-            ? `✅ ${successCount} de ${results.length} tarefas executadas com sucesso!\n\n${results.map((r, i) => `${i + 1}. ${r.message}`).join("\n")}`
-            : `⚠️ ${successCount} de ${results.length} tarefas executadas.\n\n${results.map((r, i) => `${i + 1}. ${r.success ? "✅" : "❌"} ${r.message}`).join("\n")}`;
-        }
-
-        const resultMessage: Message = {
-          role: "assistant",
-          content: resultContent,
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, resultMessage]);
-
-        if (allSuccess) {
-          loadMetrics();
-          toast({
-            title: "✅ Tarefas executadas",
-            description: `${successCount} tarefas concluídas com sucesso.`,
-          });
-        } else {
-          toast({
-            title: "⚠️ Algumas tarefas falharam",
-            description: `${successCount} de ${results.length} tarefas executadas.`,
-            variant: "destructive",
-          });
-        }
+      // Mostrar toast de sucesso/erro
+      if (result.success) {
+        toast({
+          title: "✅ Concluído",
+          description: result.toolCalls > 0 
+            ? `${result.toolCalls} ação(ões) executada(s)` 
+            : assistantContent,
+        });
+      } else {
+        toast({
+          title: "⚠️ Atenção",
+          description: result.message,
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("❌ Erro ao processar mensagem:", error);
@@ -226,13 +212,13 @@ export default function AIChat() {
       
       const errorMessage: Message = {
         role: "assistant",
-        content: `❌ Erro: ${errorDetails}\n\nPor favor, tente novamente ou reformule sua solicitação.`,
+        content: `Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.`,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
       toast({
         title: "Erro",
-        description: errorDetails,
+        description: "Não foi possível processar sua mensagem.",
         variant: "destructive",
       });
     } finally {

@@ -93,20 +93,17 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Settings at bottom */}
+        {/* Settings at bottom - disabled until route is implemented */}
         <div className="mt-auto p-4 border-t border-border">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild className="h-16 text-lg font-semibold">
-                <NavLink 
-                  to="/configuracoes" 
-                  className={getNavCls}
-                  title={isCollapsed ? "Configurações" : undefined}
-                  aria-label="Ir para Configurações"
-                >
-                  <Settings className={`h-7 w-7 ${isCollapsed ? "mx-auto" : "mr-4"}`} aria-hidden="true" />
-                  {!isCollapsed && <span className="font-semibold">Configurações</span>}
-                </NavLink>
+              <SidebarMenuButton 
+                className="h-16 text-lg font-semibold opacity-50 cursor-not-allowed"
+                disabled
+                title="Configurações em breve"
+              >
+                <Settings className={`h-7 w-7 ${isCollapsed ? "mx-auto" : "mr-4"}`} aria-hidden="true" />
+                {!isCollapsed && <span className="font-semibold">Configurações</span>}
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

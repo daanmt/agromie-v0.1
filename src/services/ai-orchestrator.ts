@@ -111,9 +111,10 @@ export async function processMessageWithOrchestrator(
   if (!apiKey) {
     return {
       success: false,
-      message: "Configuração incompleta. Entre em contato com o suporte.",
+      message: "Chave de API do OpenRouter não configurada. Configure VITE_OPENROUTER_API_KEY no arquivo .env",
       toolCalls: 0,
       iterations: 0,
+      errors: ["VITE_OPENROUTER_API_KEY não encontrada nas variáveis de ambiente"],
     };
   }
 
@@ -168,8 +169,16 @@ export async function processMessageWithOrchestrator(
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("❌ Erro na API OpenRouter:", response.status, errorText);
-        errors.push(`Erro na API: ${response.status}`);
+        let errorMessage = `Erro na API: ${response.status}`;
+        
+        if (response.status === 401) {
+          errorMessage = "Chave de API do OpenRouter inválida ou não configurada. Verifique o arquivo .env";
+          console.error("❌ Erro 401 - Chave de API inválida. Verifique VITE_OPENROUTER_API_KEY no .env");
+        } else {
+          console.error("❌ Erro na API OpenRouter:", response.status, errorText);
+        }
+        
+        errors.push(errorMessage);
         break;
       }
 
@@ -257,15 +266,22 @@ export async function processMessageWithOrchestrator(
       .join("\n\n");
 
     const success = errors.length === 0 && iterations < maxIterations;
+    
+    // Mensagem mais amigável para erros de API
+    let userMessage = success
+      ? "Operação concluída com sucesso"
+      : errors.length > 0 
+        ? errors[0].includes("401") || errors[0].includes("Chave de API")
+          ? "Chave de API do OpenRouter inválida. Verifique o arquivo .env e configure uma chave válida em https://openrouter.ai/keys"
+          : `Operação concluída com ${errors.length} erro(s)`
+        : "Operação concluída";
 
     return {
       success,
-      message: success
-        ? "Operação concluída com sucesso"
-        : `Operação concluída com ${errors.length} erro(s)`,
+      message: userMessage,
       toolCalls,
       iterations,
-      finalResponse: finalResponse || "Nenhuma resposta gerada",
+      finalResponse: finalResponse || (errors.length > 0 ? userMessage : "Nenhuma resposta gerada"),
       errors: errors.length > 0 ? errors : undefined,
     };
   } catch (error) {

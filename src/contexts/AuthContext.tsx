@@ -1,11 +1,21 @@
+/**
+ * AuthContext simplificado - sem Supabase
+ * Autenticação mock usando localStorage
+ * TODO: Implementar autenticação real quando necessário
+ */
+
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+
+interface User {
+  id: string;
+  email: string;
+  full_name?: string;
+}
 
 interface AuthContextType {
-  session: Session | null;
+  session: { user: User } | null;
   isLoading: boolean;
-  user: any;
+  user: User | null;
   signUp: (email: string, password: string, fullName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -14,77 +24,67 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const STORAGE_KEY = 'agromie_auth';
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<{ user: User } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    };
-
-    getSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+    // Verificar se há sessão salva
+    const savedSession = localStorage.getItem(STORAGE_KEY);
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession);
+        setSession({ user: parsed });
+        setUser(parsed);
+      } catch (error) {
+        console.error('Erro ao recuperar sessão:', error);
+        localStorage.removeItem(STORAGE_KEY);
       }
-    );
-
-    return () => {
-      subscription?.unsubscribe();
-    };
+    }
+    setIsLoading(false);
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-        },
-      });
-
-      if (error) throw error;
-
-      await supabase.from('profiles').insert({
-        id: (await supabase.auth.getUser()).data.user?.id,
-        email,
-        full_name: fullName,
-      });
-    } catch (error) {
-      throw error;
-    }
+    // Mock: sempre cria usuário com sucesso
+    const newUser: User = {
+      id: `user_${Date.now()}`,
+      email,
+      full_name: fullName,
+    };
+    
+    const newSession = { user: newUser };
+    setSession(newSession);
+    setUser(newUser);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    // Mock: sempre faz login com sucesso
+    // Em produção, validaria credenciais
+    const mockUser: User = {
+      id: `user_${Date.now()}`,
       email,
-      password,
-    });
-
-    if (error) throw error;
+      full_name: 'Usuário',
+    };
+    
+    const newSession = { user: mockUser };
+    setSession(newSession);
+    setUser(mockUser);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(mockUser));
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    setSession(null);
+    setUser(null);
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   const resetPassword = async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-
-    if (error) throw error;
+    // Mock: sempre retorna sucesso
+    console.log('Reset password requested for:', email);
   };
 
   return (

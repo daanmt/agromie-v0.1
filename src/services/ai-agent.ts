@@ -1609,11 +1609,19 @@ export const aiAgent = {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("❌ Erro na API OpenRouter:", response.status, errorText);
+        let errorMessage = "Desculpe, tive um problema. Pode tentar de novo?";
+        
+        if (response.status === 401) {
+          errorMessage = "Chave de API do OpenRouter inválida. Verifique o arquivo .env e configure uma chave válida em https://openrouter.ai/keys";
+          console.error("❌ Erro 401 - Chave de API inválida. Verifique VITE_OPENROUTER_API_KEY no .env");
+        } else {
+          console.error("❌ Erro na API OpenRouter:", response.status, errorText);
+        }
+        
         return {
           results: [{
             success: false,
-            message: "Desculpe, tive um problema. Pode tentar de novo?",
+            message: errorMessage,
           }],
         };
       }

@@ -1,14 +1,10 @@
-import { useState } from "react";
 import { 
   LayoutDashboard, 
-  Wheat, 
-  Users, 
-  CloudRain, 
-  Package, 
+  Beef, 
   DollarSign, 
-  QrCode,
-  Calendar,
-  Settings
+  Settings,
+  Sprout,
+  Activity
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -26,14 +22,10 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Gestão de Lavouras", url: "/lavouras", icon: Wheat },
-  { title: "Gestão Pecuária", url: "/pecuaria", icon: Users },
-  { title: "Clima & Seca", url: "/clima", icon: CloudRain },
-  { title: "Insumos & Estoque", url: "/insumos", icon: Package },
-  { title: "Financeiro Rural", url: "/financeiro", icon: DollarSign },
-  { title: "Rastreabilidade", url: "/rastreabilidade", icon: QrCode },
-  { title: "Agenda", url: "/agenda", icon: Calendar },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Pecuária", url: "/pecuaria", icon: Beef },
+  { title: "Financeiro", url: "/financeiro", icon: DollarSign },
+  { title: "Pastagens", url: "/pastagens", icon: Activity },
 ];
 
 export function AppSidebar() {
@@ -47,35 +39,35 @@ export function AppSidebar() {
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
       ? "bg-primary text-primary-foreground font-medium shadow-success" 
-      : "hover:bg-accent hover:text-accent-foreground transition-all duration-200";
+      : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground transition-all duration-200";
 
   return (
     <Sidebar
-      className={`${isCollapsed ? "w-14" : "w-64"} border-r-2 border-border bg-card shadow-card transition-all duration-300`}
+      className={`${isCollapsed ? "w-14" : "w-64"} border-r-2 border-border bg-sidebar shadow-card transition-all duration-300`}
       collapsible="icon"
     >
-      <SidebarContent className="bg-gradient-secondary">
+      <SidebarContent className="bg-sidebar text-sidebar-foreground">
         {/* Logo/Brand Section */}
         <div className="p-6 border-b border-border">
           {!isCollapsed ? (
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Wheat className="h-8 w-8 text-white" />
+              <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center shadow-lg">
+                <Sprout className="h-8 w-8 text-primary-foreground" />
               </div>
               <div>
-                <h2 className="font-bold text-2xl text-foreground">AgrOmie</h2>
-                <p className="text-base text-muted-foreground font-medium">Gestão Rural Simples</p>
+                <h2 className="font-bold text-2xl text-sidebar-foreground">Gestão Rural</h2>
+                <p className="text-base text-sidebar-foreground/70 font-medium">Simples</p>
               </div>
             </div>
           ) : (
-            <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl flex items-center justify-center mx-auto">
-              <Wheat className="h-8 w-8 text-white" />
+            <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mx-auto">
+              <Sprout className="h-8 w-8 text-primary-foreground" />
             </div>
           )}
         </div>
 
         <SidebarGroup className="px-4 pt-6">
-          <SidebarGroupLabel className={isCollapsed ? "sr-only" : "text-muted-foreground font-semibold text-lg mb-4"}>
+          <SidebarGroupLabel className={isCollapsed ? "sr-only" : "text-sidebar-foreground/70 font-semibold text-lg mb-4"}>
             Módulos Principais
           </SidebarGroupLabel>
           

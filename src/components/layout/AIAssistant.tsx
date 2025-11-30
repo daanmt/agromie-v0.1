@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { aiOrchestrator } from "@/services/ai-orchestrator";
 
 interface Message {
   role: "user" | "assistant";
@@ -17,7 +17,7 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Olá! Sou o assistente do AgrOmie. Como posso ajudá-lo hoje? Posso explicar qualquer funcionalidade ou ajudá-lo a navegar pelo sistema.",
+      content: "Olá! Sou o assistente do AgrOmie. Posso ajudá-lo a registrar receitas, despesas, compras e vendas de animais, nascimentos, e muito mais. Como posso ajudá-lo?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -29,26 +29,48 @@ export function AIAssistant() {
 
     const userMessage: Message = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
+    const userInput = input;
     setInput("");
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke("ai-assistant", {
-        body: { message: input, history: messages },
-      });
+      // Processar mensagem com orchestrator LLM-centered
+      const result = await aiOrchestrator.processMessage(userInput);
 
-      if (error) throw error;
-
+      // Adicionar resposta do assistente
+      const assistantContent = result.finalResponse || result.message || "Não entendi. Pode reformular?";
+      
       const assistantMessage: Message = {
         role: "assistant",
-        content: data.response,
+        content: assistantContent,
       };
       setMessages((prev) => [...prev, assistantMessage]);
+
+      // Mostrar toast de sucesso/erro
+      if (result.success) {
+        toast({
+          title: "✅ Concluído",
+          description: result.toolCalls > 0 
+            ? `${result.toolCalls} ação(ões) executada(s)` 
+            : assistantContent,
+        });
+      } else {
+        toast({
+          title: "⚠️ Atenção",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
     } catch (error) {
-      console.error("Error calling AI assistant:", error);
+      console.error("Erro ao processar mensagem:", error);
+      const errorMessage: Message = {
+        role: "assistant",
+        content: "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
       toast({
-        title: "Erro ao contatar assistente",
-        description: "Tente novamente em alguns instantes.",
+        title: "Erro",
+        description: "Não foi possível processar sua mensagem.",
         variant: "destructive",
       });
     } finally {

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2, Bot, User } from "lucide-react";
+import { Send, Loader2, Bot, User, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -14,7 +14,7 @@ import { livestockCalculations, categoryService } from "@/services/livestock";
 import { pastureCalculations } from "@/services/pasture";
 
 interface Message {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
   timestamp: Date;
 }
@@ -26,7 +26,39 @@ const formatCurrency = (value: number) => {
   }).format(value / 100);
 };
 
-export default function Index() {
+// Função removida - não mais necessária com orchestrator
+const formatTasksList = (response: any): string => {
+  if (response.actions && Array.isArray(response.actions)) {
+    return `📋 **Lista de Tarefas Identificadas:**\n\n${response.actions
+      .map((action, index) => {
+        const intentName = action.intent.replace(/_/g, " ").toUpperCase();
+        const entitiesStr = Object.entries(action.entities)
+          .map(([key, value]) => {
+            if (key === "valor" && typeof value === "number") {
+              return `${key}: ${formatCurrency(value)}`;
+            }
+            return `${key}: ${value}`;
+          })
+          .join(", ");
+        return `${index + 1}. **${intentName}**\n   ${entitiesStr}`;
+      })
+      .join("\n\n")}\n\n⏳ Executando tarefas...`;
+  } else if (response.intent) {
+    const intentName = response.intent.replace(/_/g, " ").toUpperCase();
+    const entitiesStr = Object.entries(response.entities || {})
+      .map(([key, value]) => {
+        if (key === "valor" && typeof value === "number") {
+          return `${key}: ${formatCurrency(value)}`;
+        }
+        return `${key}: ${value}`;
+      })
+      .join(", ");
+    return `📋 **Tarefa Identificada:**\n\n**${intentName}**\n${entitiesStr}\n\n⏳ Executando tarefa...`;
+  }
+  return "Não foi possível identificar tarefas.";
+};
+
+export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -68,7 +100,6 @@ export default function Index() {
 
   const loadMetrics = () => {
     try {
-      // Log removido - muito verboso
       const startDate = new Date(new Date().getFullYear(), 0, 1).toISOString().split("T")[0];
       const endDate = new Date().toISOString().split("T")[0];
       
@@ -78,21 +109,18 @@ export default function Index() {
 
       try {
         financialMetrics = financialCalculations.calculateMetrics(startDate, endDate);
-        console.log("💰 Métricas financeiras:", financialMetrics);
       } catch (error) {
         console.error("Erro ao calcular métricas financeiras:", error);
       }
 
       try {
         livestockMetrics = livestockCalculations.calculateMetrics(startDate, endDate);
-        console.log("🐄 Métricas do rebanho:", livestockMetrics);
       } catch (error) {
         console.error("Erro ao calcular métricas do rebanho:", error);
       }
 
       try {
         pastureBalance = pastureCalculations.calculateBalance();
-        console.log("🌾 Balanço de pastagens:", pastureBalance);
       } catch (error) {
         console.error("Erro ao calcular balanço de pastagens:", error);
       }
@@ -112,7 +140,6 @@ export default function Index() {
           stockingRate: pastureBalance.stockingRate || 0,
         },
       });
-      console.log("✅ Métricas atualizadas no estado");
     } catch (error) {
       console.error("Erro ao carregar métricas:", error);
     }
@@ -141,38 +168,57 @@ export default function Index() {
     setIsLoading(true);
 
     try {
-      // Processar mensagem com orchestrator LLM-centered
-      const result = await aiOrchestrator.processMessage(userInput);
+      // Processar mensagem (interpretar + executar)
+      const { tasks, results } = await aiAgent.processMessage(userInput);
 
-      // Mostrar resposta do orchestrator
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: result.finalResponse || result.message,
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-
-      // Recarregar métricas se houve tool calls
-      if (result.toolCalls > 0) {
-        setTimeout(() => {
-          loadMetrics();
-        }, 300);
-        setTimeout(() => {
-          loadMetrics();
-        }, 1000);
+      // Mostrar lista de tarefas se houver
+      if (tasks) {
+        const tasksList = formatTasksList(tasks);
+        const tasksMessage: Message = {
+          role: "system",
+          content: tasksList,
+          timestamp: new Date(),
+          tasks: tasks,
+        };
+        setMessages((prev) => [...prev, tasksMessage]);
       }
-      
-      if (result.success) {
-        toast({
-          title: "✅ Concluído",
-          description: `${result.toolCalls} ação(ões) executada(s)`,
-        });
-      } else {
-        toast({
-          title: "⚠️ Atenção",
-          description: result.message,
-          variant: "destructive",
-        });
+
+      // Mostrar resultados
+      if (results && results.length > 0) {
+        const successCount = results.filter((r) => r.success).length;
+        const allSuccess = successCount === results.length;
+        
+        let resultContent = "";
+        if (results.length === 1) {
+          resultContent = results[0].success
+            ? `✅ ${results[0].message}`
+            : `❌ ${results[0].message}`;
+        } else {
+          resultContent = allSuccess
+            ? `✅ ${successCount} de ${results.length} tarefas executadas com sucesso!\n\n${results.map((r, i) => `${i + 1}. ${r.message}`).join("\n")}`
+            : `⚠️ ${successCount} de ${results.length} tarefas executadas.\n\n${results.map((r, i) => `${i + 1}. ${r.success ? "✅" : "❌"} ${r.message}`).join("\n")}`;
+        }
+
+        const resultMessage: Message = {
+          role: "assistant",
+          content: resultContent,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, resultMessage]);
+
+        if (allSuccess) {
+          loadMetrics();
+          toast({
+            title: "✅ Tarefas executadas",
+            description: `${successCount} tarefas concluídas com sucesso.`,
+          });
+        } else {
+          toast({
+            title: "⚠️ Algumas tarefas falharam",
+            description: `${successCount} de ${results.length} tarefas executadas.`,
+            variant: "destructive",
+          });
+        }
       }
     } catch (error) {
       console.error("❌ Erro ao processar mensagem:", error);
@@ -180,13 +226,13 @@ export default function Index() {
       
       const errorMessage: Message = {
         role: "assistant",
-        content: `Desculpe, tive um problema. Pode tentar de novo?`,
+        content: `❌ Erro: ${errorDetails}\n\nPor favor, tente novamente ou reformule sua solicitação.`,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
       toast({
         title: "Erro",
-        description: "Tente novamente.",
+        description: errorDetails,
         variant: "destructive",
       });
     } finally {
@@ -204,7 +250,7 @@ export default function Index() {
           
           <div className="flex-1 flex gap-6 p-6">
             {/* Dashboard Lateral */}
-            <div className="w-80 space-y-4 shrink-0">
+            <div className="w-80 space-y-4">
               <Card className="p-4 border-2 border-border">
                 <h3 className="font-bold text-lg mb-4">Dashboard</h3>
                 
@@ -259,10 +305,10 @@ export default function Index() {
             </div>
 
             {/* Chat Principal */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col">
               <Card className="flex-1 flex flex-col border-2 border-border">
                 {/* Header */}
-                <div className="p-4 border-b border-border shrink-0">
+                <div className="p-4 border-b border-border">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                       <Bot className="h-6 w-6 text-primary-foreground" />
@@ -285,14 +331,22 @@ export default function Index() {
                         }`}
                       >
                         {message.role !== "user" && (
-                          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shrink-0">
-                            <Bot className="h-4 w-4 text-primary-foreground" />
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                            message.role === "system" ? "bg-muted" : "bg-primary"
+                          }`}>
+                            {message.role === "system" ? (
+                              <CheckCircle2 className="h-4 w-4 text-foreground" />
+                            ) : (
+                              <Bot className="h-4 w-4 text-primary-foreground" />
+                            )}
                           </div>
                         )}
                         <div
                           className={`max-w-[80%] rounded-lg p-3 ${
                             message.role === "user"
                               ? "bg-primary text-primary-foreground"
+                              : message.role === "system"
+                              ? "bg-muted border-2 border-primary/20 text-foreground"
                               : "bg-muted text-foreground"
                           }`}
                         >
@@ -325,7 +379,7 @@ export default function Index() {
                 </ScrollArea>
 
                 {/* Input */}
-                <div className="p-4 border-t border-border shrink-0">
+                <div className="p-4 border-t border-border">
                   <div className="flex gap-2">
                     <Input
                       ref={inputRef}

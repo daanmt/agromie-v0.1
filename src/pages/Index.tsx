@@ -202,11 +202,11 @@ export default function Index() {
         <div className="flex-1 flex flex-col">
           <AppHeader />
           
-          <div className="flex-1 flex gap-6 p-6">
+          <div className="flex-1 flex gap-8 p-8">
             {/* Dashboard Lateral */}
             <div className="w-80 space-y-4 shrink-0">
-              <Card className="p-4 border-2 border-border">
-                <h3 className="font-bold text-lg mb-4">Dashboard</h3>
+              <Card className="p-6 border-2 border-border">
+                <h3 className="font-bold text-lg mb-6">Dashboard</h3>
                 
                 <div className="space-y-4">
                   <div>
@@ -262,8 +262,8 @@ export default function Index() {
             <div className="flex-1 flex flex-col min-w-0">
               <Card className="flex-1 flex flex-col border-2 border-border">
                 {/* Header */}
-                <div className="p-4 border-b border-border shrink-0">
-                  <div className="flex items-center gap-3">
+                <div className="p-6 border-b border-border shrink-0">
+                  <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                       <Bot className="h-6 w-6 text-primary-foreground" />
                     </div>
@@ -275,12 +275,12 @@ export default function Index() {
                 </div>
 
                 {/* Messages */}
-                <ScrollArea className="flex-1 p-4">
+                <ScrollArea className="flex-1 p-6">
                   <div className="space-y-4">
                     {messages.map((message, index) => (
                       <div
                         key={index}
-                        className={`flex gap-3 ${
+                        className={`flex gap-4 ${
                           message.role === "user" ? "justify-end" : "justify-start"
                         }`}
                       >
@@ -290,7 +290,7 @@ export default function Index() {
                           </div>
                         )}
                         <div
-                          className={`max-w-[80%] rounded-lg p-3 ${
+                          className={`max-w-[80%] rounded-lg p-4 ${
                             message.role === "user"
                               ? "bg-primary text-primary-foreground"
                               : "bg-muted text-foreground"

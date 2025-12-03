@@ -137,7 +137,7 @@ const Financeiro = () => {
         <div className="flex-1 flex flex-col">
           <AppHeader />
           
-          <main className="flex-1 p-6 space-y-6">
+          <main className="flex-1 p-8 space-y-8">
             {/* Header */}
             <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -149,7 +149,7 @@ const Financeiro = () => {
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-success rounded-xl flex items-center justify-center">
                 <DollarSign className="h-6 w-6 text-success-foreground" />
               </div>
@@ -166,7 +166,7 @@ const Financeiro = () => {
         </div>
 
         {/* Métricas Financeiras */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <Card className="border-2 border-border bg-card">
             <CardContent className="p-6 text-center">
               <DollarSign className="h-8 w-8 text-success mx-auto mb-2" />
@@ -209,7 +209,7 @@ const Financeiro = () => {
         </div>
 
         {/* Métricas Detalhadas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Margens</CardTitle>

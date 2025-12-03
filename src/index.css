@@ -1,3 +1,10 @@
+/* AgrOmie Typography - Inter (Primary) + Manrope (Display) */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/manrope/600.css';
+@import '@fontsource/manrope/700.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,6 +41,20 @@
     --accent-foreground: 0 0% 100%;
     --accent-primary: 142 60% 30%;
 
+    /* Secondary Warm Accent - Terra-cotta for CTAs */
+    --secondary-warm: 25 75% 47%;
+
+    /* Data Visualization Palette */
+    --chart-blue: 210 75% 50%;
+    --chart-purple: 260 60% 55%;
+    --chart-teal: 180 60% 45%;
+    --chart-amber: 40 85% 55%;
+
+    /* Surface Colors for Depth */
+    --surface-1: 0 0% 98%;  /* Lightest gray */
+    --surface-2: 0 0% 95%;  /* Light gray */
+    --surface-3: 0 0% 92%;  /* Medium gray */
+
     /* Success - Verde Escuro */
     --success: 142 70% 30%;
     --success-foreground: 0 0% 100%;
@@ -58,8 +79,10 @@
     /* Border radius */
     --radius: 0.5rem;
 
-    /* Custom gradients - Removidos, usando cores sólidas */
-    --gradient-primary: hsl(var(--primary));
+    /* Gradient Definitions */
+    --gradient-primary: linear-gradient(135deg, hsl(142 70% 25%) 0%, hsl(142 60% 35%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(142 70% 30%) 0%, hsl(142 60% 40%) 100%);
     --gradient-secondary: hsl(var(--secondary));
     --gradient-accent: hsl(var(--accent));
     --gradient-dashboard: hsl(var(--background));
@@ -102,6 +125,20 @@
     --accent: 142 50% 40%;
     --accent-foreground: 0 0% 100%;
 
+    /* Secondary Warm Accent - Terra-cotta (adjusted for dark) */
+    --secondary-warm: 25 70% 52%;
+
+    /* Data Visualization Palette (adjusted for dark) */
+    --chart-blue: 210 70% 55%;
+    --chart-purple: 260 55% 60%;
+    --chart-teal: 180 55% 50%;
+    --chart-amber: 40 80% 60%;
+
+    /* Surface Colors for Depth (dark mode) */
+    --surface-1: 0 0% 8%;   /* Slightly lighter black */
+    --surface-2: 0 0% 10%;  /* Light black */
+    --surface-3: 0 0% 15%;  /* Medium gray-black */
+
     --success: 142 60% 35%;
     --success-foreground: 0 0% 100%;
 
@@ -118,7 +155,10 @@
     --input: 0 0% 15%;
     --ring: 142 60% 35%;
 
-    --gradient-primary: hsl(var(--primary));
+    /* Gradient Definitions (dark mode) */
+    --gradient-primary: linear-gradient(135deg, hsl(142 60% 35%) 0%, hsl(142 50% 45%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 5%) 0%, hsl(0 0% 8%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(142 60% 35%) 0%, hsl(142 50% 45%) 100%);
     --gradient-secondary: hsl(var(--secondary));
     --gradient-accent: hsl(var(--accent));
     --gradient-dashboard: hsl(var(--background));
